@@ -16,6 +16,8 @@ services:
       - slims_files:/var/www/html/files
       - slims_repository:/var/www/html/repository
       - slims_images:/var/www/html/images/docs
+    networks:
+      - coolify
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 30s
@@ -31,6 +33,6 @@ volumes:
   slims_images:
     driver: local
 
-# JANGAN define custom networks di sini!
-# Coolify otomatis attach container ke network "coolify"
-# agar coolify-proxy bisa reach aplikasi tanpa 504 timeout.
+networks:
+  coolify:
+    external: true  # join network coolify milik Coolify, bukan buat baru
