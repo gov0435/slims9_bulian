@@ -1,10 +1,19 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-# Write environment variables to env.php
-cat <<EOF >/var/www/html/config/env.php
+echo "=== SLiMS 9 Bulian - Entrypoint ==="
+
+# =============================================
+# Generate config/env.php dari APP_ENV
+# =============================================
+APP_ENV="${APP_ENV:-production}"
+
+echo "Setting environment: $APP_ENV"
+
+cat > /var/www/html/config/env.php << EOF
 <?php
-\$env = "${ENV}";
-\$conditional_environment = "${ENV}";
+\$env = "${APP_ENV}";
+\$conditional_environment = "${APP_ENV}";
 \$based_on_ip = false;
 \$range_ip = [''];
 if (\$based_on_ip) {
@@ -16,22 +25,23 @@ if (\$based_on_ip) {
 }
 EOF
 
-echo "PHP configuration file created: /var/www/html/config/env.php"
-cat /var/www/html/config/env.php
+# =============================================
+# Generate config/database.php dari env vars
+# =============================================
+echo "Setting database config..."
 
-# Write environment variables to database.php
-cat <<EOF >/var/www/html/config/database.php
+cat > /var/www/html/config/database.php << EOF
 <?php
 return [
     'default_profile' => 'SLiMS',
     'proxy' => false,
     'nodes' => [
         'SLiMS' => [
-            'host' => '${DB_HOST}',
-            'database' => '${DB_NAME}',
-            'port' => '${DB_PORT}',
-            'username' => '${DB_USER}',
-            'password' => '${DB_PASS}',
+            'host' => '${DB_HOST:-localhost}',
+            'database' => '${DB_NAME:-senayan}',
+            'port' => '${DB_PORT:-3306}',
+            'username' => '${DB_USER:-root}',
+            'password' => '${DB_PASSWORD:-}',
             'options' => [
                 'storage_engine' => 'MyISAM'
             ]
@@ -40,8 +50,20 @@ return [
 ];
 EOF
 
-echo "PHP configuration file created: /var/www/html/config/database.php"
-cat /var/www/html/config/database.php
+# =============================================
+# Set permissions
+# =============================================
+echo "Setting permissions..."
+chown -R www-data:www-data /var/www/html/files \
+    /var/www/html/repository \
+    /var/www/html/images \
+    /var/www/html/config \
+    /var/www/html/cache 2>/dev/null || true
 
-# Start the PHP application
-exec "$@"
+chmod -R 775 /var/www/html/files \
+    /var/www/html/repository \
+    /var/www/html/images \
+    /var/www/html/config 2>/dev/null || true
+
+echo "=== Starting Apache ==="
+exec apache2-foreground
