@@ -15,7 +15,7 @@ services:
     volumes:
       - slims_files:/var/www/html/files
       - slims_repository:/var/www/html/repository
-      - slims_images:/var/www/html/images/docs
+      - slims_images:/var/www/html/images
     networks:
       - coolify
     healthcheck:
@@ -27,10 +27,13 @@ services:
 
 volumes:
   slims_files:
+    name: slims9_bulian_files
     driver: local
   slims_repository:
+    name: slims9_bulian_repository
     driver: local
   slims_images:
+    name: slims9_bulian_images
     driver: local
 
 networks:
