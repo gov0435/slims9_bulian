@@ -103,3 +103,7 @@ DROP DATABASE default;
 CREATE DATABASE default;
 -- Re-import senayan_ddl.sql
 ```
+
+## Backup manual
+
+docker exec -i eddf155af3c9 mysqldump  mariadb -u mariadb -ptgnfCWX0r1peE2bpoIPOJQAgukE6PXw4OhfGYNMuNa5rThX2mf48tO9fYXB3gBoD default > backup_default_slim27.sql
