@@ -26,7 +26,7 @@ SERVICE_FQDN_SLIMS=pustaka.sslip.io
 
 ## copy db dari service slims
 ```
-docker cp d23f71a73297:/var/www/html/install/senayan_ddl.sql /tmp/senayan_ddl.sql
+docker cp db1a68360cbd:/var/www/html/senayan_fix.sql /tmp/senayan_fix.sql
 ```
 
 #### Option : Docker/Container Environment

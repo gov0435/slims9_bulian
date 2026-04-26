@@ -1175,7 +1175,7 @@ CREATE TABLE `plugins` (
 -- Table structure for table `user_tokens`
 --
 
-CREATE TABLE `user_tokens` (
+CREATE TABLE IF NOT EXISTS `user_tokens` (
   `id` int NOT NULL AUTO_INCREMENT,
   `selector` varchar(255) NOT NULL,
   `hashed_validator` varchar(255) NOT NULL,
